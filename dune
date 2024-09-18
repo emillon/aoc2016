@@ -1,6 +1,6 @@
 (library
  (public_name aoc2016)
- (libraries cmdliner)
+ (libraries angstrom cmdliner)
  (flags :standard -open Base -open Stdio)
  (inline_tests)
  (preprocess
@@ -15,4 +15,4 @@
  (rule
   (with-stdout-to
    dune.inc
-   (run ../gen/gen.exe 2))))
+   (run ../gen/gen.exe 3))))
