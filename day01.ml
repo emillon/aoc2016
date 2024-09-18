@@ -1,18 +1,3 @@
-module Vec = struct
-  module T = struct
-    type t = int * int [@@deriving compare, sexp]
-  end
-
-  include T
-  include Comparable.Make (T)
-
-  let l1_norm (x, y) = abs x + abs y
-  let zero = 0, 0
-  let one = 1, 0
-  let cmul (ax, ay) (bx, by) = (ax * bx) - (ay * by), (ay * bx) + (ax * by)
-  let add (ax, ay) (bx, by) = ax + bx, ay + by
-end
-
 let repeat n l = List.init n ~f:(fun _ -> l) |> List.concat
 
 module Instr = struct
