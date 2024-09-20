@@ -79,4 +79,4 @@ let%expect_test _ =
   [%expect {| 4 |}]
 ;;
 
-let run () = Run.run ~name:"day01" ~f1 ~f2 Day01_input.data
+let run () = Run.run ~f1 ~f2 Day01_input.data

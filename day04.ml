@@ -72,4 +72,4 @@ let f2 s =
     Option.some_if (is_ok decrypted) r.id)
 ;;
 
-let run () = Run.run ~name:"day04" ~f1 ~f2 Day04_input.data
+let run () = Run.run ~f1 ~f2 Day04_input.data

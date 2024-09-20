@@ -71,4 +71,4 @@ let parse_line s = String.to_list s |> List.map ~f:Dir.parse
 let parse s = String.split_lines s |> List.map ~f:parse_line
 let f1 s = parse s |> List.map ~f:(fun l -> get_code Digit.of_pos1 l) |> of_digits
 let f2 s = parse s |> List.map ~f:(fun l -> get_code Digit.of_pos2 l) |> of_digits
-let run () = Run.run_string ~name:"day02" ~f1 ~f2 Day02_input.data
+let run () = Run.run_string ~f1 ~f2 Day02_input.data

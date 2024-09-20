@@ -24,4 +24,4 @@ let rec transpose = function
 ;;
 
 let f2 s = parse s |> transpose |> List.count ~f:is_valid
-let run () = Run.run ~name:"day03" ~f1 ~f2 Day03_input.data
+let run () = Run.run ~f1 ~f2 Day03_input.data

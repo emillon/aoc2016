@@ -1,5 +1,5 @@
-let run_gen ~name ~f1 ~f2 data ~print =
-  let info = Cmdliner.Cmd.info name in
+let run_gen ~f1 ~f2 data ~print =
+  let info = Cmdliner.Cmd.info "AOC" in
   let term =
     let open Cmdliner.Term.Syntax in
     let+ part =
@@ -17,5 +17,5 @@ let run_gen ~name ~f1 ~f2 data ~print =
   Cmdliner.Cmd.eval cmd |> Stdlib.exit
 ;;
 
-let run ~name ~f1 ~f2 data = run_gen ~name ~f1 ~f2 data ~print:(printf "%d\n")
-let run_string ~name ~f1 ~f2 data = run_gen ~name ~f1 ~f2 data ~print:(printf "%s\n")
+let run ~f1 ~f2 data = run_gen ~f1 ~f2 data ~print:(printf "%d\n")
+let run_string ~f1 ~f2 data = run_gen ~f1 ~f2 data ~print:(printf "%s\n")
