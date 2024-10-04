@@ -15,6 +15,11 @@ let parse_using p s =
   | Error e -> Printf.ksprintf failwith "While parsing %S: %s" s e
 ;;
 
+let parse_lines_using p =
+  let open Angstrom in
+  parse_using (many (p <* end_of_line))
+;;
+
 let enum l =
   let open Angstrom in
   List.map l ~f:(fun (s, r) -> string s *> return r) |> choice
