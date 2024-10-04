@@ -5,10 +5,12 @@ let rec insert x l =
   match l with
   | [] -> [ [ x ] ]
   | h :: t -> (x :: l) :: List.map ~f:(fun l -> h :: l) (insert x t)
+;;
 
 let rec permutations = function
   | [] -> [ [] ]
   | x :: xs -> List.concat_map ~f:(insert x) (permutations xs)
+;;
 
 let%expect_test "permutations" =
   permutations [ 1; 2; 3; 4 ] |> [%sexp_of: int list list] |> print_s;
@@ -18,17 +20,27 @@ let%expect_test "permutations" =
      (3 2 4 1) (1 3 4 2) (3 1 4 2) (3 4 1 2) (3 4 2 1) (1 2 4 3) (2 1 4 3)
      (2 4 1 3) (2 4 3 1) (1 4 2 3) (4 1 2 3) (4 2 1 3) (4 2 3 1) (1 4 3 2)
      (4 1 3 2) (4 3 1 2) (4 3 2 1)) |}]
+;;
 
 let rec sublists = function
   | [] -> [ [] ]
   | x :: xs -> List.concat_map (sublists xs) ~f:(fun l -> [ l; List.cons x l ])
+;;
 
 let%expect_test "sublists" =
   sublists [ 'a'; 'b'; 'c' ] |> [%sexp_of: char list list] |> print_s;
   [%expect {| (() (a) (b) (a b) (c) (a c) (b c) (a b c)) |}]
+;;
 
-let rec legs_after x = function a :: l -> (x, a) :: legs_after a l | [] -> []
-let legs = function [] -> assert false | x :: xs -> legs_after x xs
+let rec legs_after x = function
+  | a :: l -> (x, a) :: legs_after a l
+  | [] -> []
+;;
+
+let legs = function
+  | [] -> assert false
+  | x :: xs -> legs_after x xs
+;;
 
 exception Overflow
 
@@ -37,10 +49,12 @@ let char_succ_exn c = Char.to_int c |> Int.succ |> Char.of_int_exn
 let rec incr_buf_at_point ~min ~max b i =
   if i < 0 then raise Overflow;
   let c = Bytes.get b i in
-  if Char.equal c max then (
+  if Char.equal c max
+  then (
     Bytes.set b i min;
     incr_buf_at_point ~min ~max b (i - 1))
   else Bytes.set b i (char_succ_exn c)
+;;
 
 let incr_buf ~min ~max b = incr_buf_at_point ~min ~max b (Bytes.length b - 1)
 
@@ -48,16 +62,19 @@ let resize_b ~min b =
   let r = Bytes.make (Bytes.length b + 1) min in
   Bytes.set r 0 (char_succ_exn min);
   r
+;;
 
 let iter_bytes ~f ~start ~min ~max =
   let rec go b =
-    if f b then Bytes.to_string b
-    else
+    if f b
+    then Bytes.to_string b
+    else (
       match incr_buf ~min ~max b with
       | () -> go b
-      | exception Overflow -> go (resize_b ~min b)
+      | exception Overflow -> go (resize_b ~min b))
   in
   go (Bytes.of_string start)
+;;
 
 let%expect_test "iter_bytes" =
   iter_bytes
@@ -65,7 +82,9 @@ let%expect_test "iter_bytes" =
       let s = Bytes.unsafe_to_string ~no_mutation_while_string_reachable:b in
       printf "%s\n" s;
       Int.of_string s >= 12)
-    ~start:"8" ~min:'0' ~max:'9'
+    ~start:"8"
+    ~min:'0'
+    ~max:'9'
   |> printf "result: %s";
   [%expect {|
     8
@@ -74,5 +93,9 @@ let%expect_test "iter_bytes" =
     11
     12
     result: 12 |}]
+;;
 
-let guard = function true -> [ () ] | false -> []
+let guard = function
+  | true -> [ () ]
+  | false -> []
+;;
