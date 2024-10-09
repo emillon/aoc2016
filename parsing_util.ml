@@ -4,6 +4,13 @@ let number =
   Int.of_string s
 ;;
 
+let signed_number =
+  let open Angstrom in
+  let+ is_negative = option false (char '-' *> return true)
+  and+ n = number in
+  if is_negative then -n else n
+;;
+
 let word =
   let open Angstrom in
   take_while1 Char.is_alpha
