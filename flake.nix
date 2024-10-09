@@ -19,6 +19,7 @@
           buildInputs = with pkgs.ocamlPackages; [
             angstrom
             cmdliner
+            diet
             digestif
             hex_encode
             ppx_jane
