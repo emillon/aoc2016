@@ -1,5 +1,5 @@
 module T = struct
-  type t = int * int [@@deriving compare, sexp]
+  type t = int * int [@@deriving compare, hash, sexp]
 end
 
 include T
@@ -10,3 +10,4 @@ let zero = 0, 0
 let one = 1, 0
 let cmul (ax, ay) (bx, by) = (ax * bx) - (ay * by), (ay * bx) + (ax * by)
 let add (ax, ay) (bx, by) = ax + bx, ay + by
+let neighbours4 (x, y) = [ x - 1, y; x + 1, y; x, y - 1; x, y + 1 ]
