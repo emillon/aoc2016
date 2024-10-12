@@ -143,13 +143,7 @@ let sim_all s =
 ;;
 
 let f1 s = fst (sim_all s)
-
-let sole = function
-  | [ x ] -> x
-  | _ -> invalid_arg "sole"
-;;
-
-let sole_output t n = sole (Map.find_exn t.outputs n)
+let sole_output t n = Algo.sole (Map.find_exn t.outputs n)
 
 let f2 s =
   let t = snd (sim_all s) in

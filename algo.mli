@@ -8,3 +8,5 @@ val guard : bool -> unit list
 
 (** Return g = gcd, s, t such that as+bt = g *)
 val egcd : int -> int -> int * int * int
+
+val sole : 'a list -> 'a
