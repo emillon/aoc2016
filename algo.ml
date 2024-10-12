@@ -99,3 +99,17 @@ let guard = function
   | true -> [ () ]
   | false -> []
 ;;
+
+let rec egcd a b =
+  if b = 0
+  then a, 1, 0
+  else (
+    let d, s, t = egcd b (a % b) in
+    d, t, s - (a / b * t))
+;;
+
+let%expect_test "egcd" =
+  let test a b = egcd a b |> [%sexp_of: int * int * int] |> print_s in
+  test 5 3;
+  [%expect {| (1 -1 2) |}]
+;;
