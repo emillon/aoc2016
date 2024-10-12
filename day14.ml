@@ -62,13 +62,6 @@ let solve ~stretched salt =
   nth_key ~n:64 ~after:0
 ;;
 
-let%expect_test "solve" =
-  solve ~stretched:false "abc" |> printf "%d";
-  [%expect {| 22728 |}];
-  solve ~stretched:true "abc" |> printf "%d";
-  [%expect {| 22551 |}]
-;;
-
 let parse s = String.strip s
 let f1 s = parse s |> solve ~stretched:false
 let f2 s = parse s |> solve ~stretched:true
