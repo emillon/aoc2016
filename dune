@@ -15,4 +15,4 @@
  (rule
   (with-stdout-to
    dune.inc
-   (run ../gen/gen.exe 24))))
+   (run ../gen/gen.exe 25))))

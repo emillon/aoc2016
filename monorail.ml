@@ -37,12 +37,14 @@ type instr =
       ; dst : Register.t
       }
   | Nop
+  | Out of Register.t
 [@@deriving equal, sexp]
 
 type t =
   { instrs : instr Map.M(Int).t
   ; ip : int
   ; regs : int Map.M(Register).t
+  ; out_handler : int -> unit
   }
 
 let get t ~reg = Map.find_exn t.regs reg
@@ -53,6 +55,7 @@ let state_from_instrs instrs =
       List.mapi instrs ~f:(fun i instr -> i, instr) |> Map.of_alist_exn (module Int)
   ; ip = 0
   ; regs = Map.empty (module Register)
+  ; out_handler = (fun _ -> assert false)
   }
 ;;
 
@@ -82,6 +85,8 @@ let parse s =
           Dec r)
        ; (let+ r = string "tgl " *> register in
           Tgl r)
+       ; (let+ r = string "out " *> register in
+          Out r)
        ])
     s
   |> state_from_instrs
@@ -106,6 +111,7 @@ let instr_offset t = function
   | Tgl _ -> 1
   | Nop -> 1
   | Mul _ -> 1
+  | Out _ -> 1
 ;;
 
 let toggle_instr = function
@@ -129,12 +135,21 @@ let exec_one t = function
       instrs = Map.change t.instrs (t.ip + t.%{Reg r}) ~f:(Option.map ~f:toggle_instr)
     }
   | Nop -> t
+  | Out r ->
+    t.out_handler t.%{Reg r};
+    t
+;;
+
+let step t =
+  let open Option.Let_syntax in
+  let%map instr = Map.find t.instrs t.ip in
+  exec_one t instr |> jump (instr_offset t instr)
 ;;
 
 let rec exec_all t =
-  match Map.find t.instrs t.ip with
+  match step t with
   | None -> t
-  | Some instr -> exec_one t instr |> jump (instr_offset t instr) |> exec_all
+  | Some t' -> exec_all t'
 ;;
 
 let exec t = exec_all t |> get ~reg:A
@@ -154,3 +169,5 @@ let optimize t =
   |> set_instr ~ip:8 ~expected:(Dec D) ~instr:Nop
   |> set_instr ~ip:9 ~expected:(Jnz { src = Reg D; offset = Int (-5) }) ~instr:Nop
 ;;
+
+let set_out_handler t ~f = { t with out_handler = f }
